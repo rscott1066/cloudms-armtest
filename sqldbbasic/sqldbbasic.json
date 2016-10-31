@@ -18,7 +18,6 @@
       "type": "string"
     },
     "sqlAdministratorLogin": {
-      "defaultValue": "administrator",
       "type": "string"
     },
     "sqlDatabaseEdition": {
