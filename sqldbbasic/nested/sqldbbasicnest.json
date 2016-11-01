@@ -72,7 +72,7 @@
       "name": "[variables('sqlAuditStorageAccountName')]",
       "location": "[resourceGroup().location]",
       "sku": {
-        "name": "[parameters('sqlAuditingStorageAccountType)]"
+        "name": "[parameters('sqlAuditingStorageAccountType')]"
       },
       "kind": "Storage",
       "properties": {
