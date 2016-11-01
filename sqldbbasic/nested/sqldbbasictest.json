@@ -1,2329 +1,1165 @@
 {
-
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-
   "contentVersion": "1.0.0.0",
-
   "parameters": {
-
     "sqlAuditingStorageAccountType": {
-
       "defaultValue": "Standard_LRS",
-
       "allowedValues": [
-
         "Premium_LRS",
-
         "Standard_LRS",
-
         "Standard_GRS"
-
       ],
-
       "type": "string"
-
     },
-
     "sqlServerName": {
-
       "type": "string"
-
     },
-
     "sqlDatabaseName": {
-
       "type": "string"
-
     },
-
     "sqlAdministratorLogin": {
-
       "defaultValue": "administrator",
-
       "type": "string"
-
     },
-
     "sqlAdministratorPassword": {
-
       "type": "securestring"
-
     },
-
     "sqlDatabaseEdition": {
-
       "defaultValue": "Standard",
-
       "allowedValues": [
-
         "Basic",
-
         "Standard",
-
         "Premium"
-
       ],
-
       "type": "string"
-
     },
-
     "sqlServiceLevelObjective": {
-
       "defaultValue": "S0",
-
       "allowedValues": [
-
         "Basic",
-
         "S0",
-
         "S1",
-
         "S2",
-
         "S3",
-
         "P1",
-
         "P2",
-
         "P4",
-
         "P6",
-
         "P11"
-
       ],
-
       "type": "string"
-
     },
-
     "sqlDatabaseMaxSizeBytes": {
-
       "type": "string",
-
       "defaultValue": "1073741824",
-
       "metadata": {
-
         "description": "The maximum size, in bytes, for the database"
-
       }
-
     },
-
     "sqlDatabaseCollation": {
-
       "defaultValue": "SQL_Latin1_General_CP1_CI_AS",
-
       "type": "string"
-
     }
-
   },
-
   "variables": {
-
     "sqlAuditStorageAccountName": "[concat(parameters('sqlServerName'), 'stg')]"
-
     },
-
   "resources": [
-
     {
-
       "type": "Microsoft.Storage/storageAccounts",
-
       "apiVersion": "2015-06-15",
-
       "name": "[variables('sqlAuditStorageAccountName')]",
-
       "location": "[resourceGroup().location]",
-
       "properties": {
-
         "accountType": "[parameters('sqlAuditingStorageAccountType')]"
-
       }
-
     },
 
-
-
     {
-
       "name": "[parameters('sqlServerName')]",
-
       "type": "Microsoft.Sql/servers",
-
       "location": "[resourceGroup().location]",
-
       "apiVersion": "2014-04-01-preview",
-
       "dependsOn": [ ],
-
       "tags": {
-
         "displayName": "SQL Server",
-
         "dataBusinessImpact": "LBI"
-
       },
-
       "properties": {
-
         "administratorLogin": "[parameters('sqlAdministratorLogin')]",
-
         "administratorLoginPassword": "[parameters('sqlAdministratorPassword')]",
-
         "version": "12.0"
-
       },
-
       "resources": [
-
         {
-
           "name": "AllowAllWindowsAzureIps",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "0.0.0.0",
-
             "endIpAddress": "0.0.0.0"
-
           }
-
         },
-
         {
-
           "name": "AllowAllCorpIps",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "131.107.0.0",
-
             "endIpAddress": "131.107.255.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSBristowBLU1",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.164.0",
-
             "endIpAddress": "167.220.164.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSBristowBLU2",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.148.0",
-
             "endIpAddress": "167.220.151.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSPugetRed1",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "131.107.147.0",
-
             "endIpAddress": "131.107.147.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSPugetRed2",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "131.107.159.0",
-
             "endIpAddress": "131.107.159.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSPugetRed3",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "131.107.160.0",
-
             "endIpAddress": "131.107.160.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSPugetRed4",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "131.107.174.0",
-
             "endIpAddress": "131.107.174.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSPugetRed5",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "131.107.192.0",
-
             "endIpAddress": "131.107.192.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSPugetRed6",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "131.107.2.0",
-
             "endIpAddress": "131.107.2.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSPugetRed7",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "131.107.69.0",
-
             "endIpAddress": "131.107.69.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSPugetRed8",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.12.0",
-
             "endIpAddress": "167.220.15.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSPugetRed9",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.144.0",
-
             "endIpAddress": "167.220.144.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSPugetRed10",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.145.0",
-
             "endIpAddress": "167.220.145.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSPugetRed11",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.128.0",
-
             "endIpAddress": "167.220.131.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSPugetRed12",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.132.0",
-
             "endIpAddress": "167.220.135.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSPugetRed13",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.20.0",
-
             "endIpAddress": "167.220.20.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSPugetRed14",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.30.0",
-
             "endIpAddress": "167.220.30.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSPugetRed15",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.31.0",
-
             "endIpAddress": "167.220.31.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSPugetRed16",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.33.0",
-
             "endIpAddress": "167.220.33.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSPugetRed17",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.34.0",
-
             "endIpAddress": "167.220.34.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSPugetRed18",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.35.0",
-
             "endIpAddress": "167.220.35.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSPugetRed19",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.36.0",
-
             "endIpAddress": "167.220.39.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSPugetRed20",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.4.0",
-
             "endIpAddress": "167.220.7.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSPugetRed21",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.96.0",
-
             "endIpAddress": "167.220.96.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSSCBay1",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.26.0",
-
             "endIpAddress": "167.220.26.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSSCBay2",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.24.0",
-
             "endIpAddress": "167.220.24.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsBRSaoPaulo1",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "191.234.96.0",
-
             "endIpAddress": "191.234.96.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsBRSaoPaulo2",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "191.234.97.0",
-
             "endIpAddress": "191.234.97.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSTK51",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.146.0",
-
             "endIpAddress": "167.220.146.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSTK52",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.136.0",
-
             "endIpAddress": "167.220.139.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsINHyd1",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.230.0",
-
             "endIpAddress": "167.220.230.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsINHyd2",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.236.0",
-
             "endIpAddress": "167.220.239.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsJPKaw1",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.229.0",
-
             "endIpAddress": "167.220.229.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsJNKaw2",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.232.0",
-
             "endIpAddress": "167.220.235.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsSGSG2a",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.255.64",
-
             "endIpAddress": "167.220.255.127"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsSGSG2b",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.255.0",
-
             "endIpAddress": "167.220.255.63"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsAUSyd1",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.240.0",
-
             "endIpAddress": "167.220.243.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsAUSyd2",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.231.0",
-
             "endIpAddress": "167.220.231.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsIEDB3a",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "194.69.100.0",
-
             "endIpAddress": "194.69.103.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsIEDB3b",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "194.69.96.0",
-
             "endIpAddress": "194.69.127.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsIEDB3c",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "94.245.87.0",
-
             "endIpAddress": "94.245.87.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUKLon1",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "194.69.96.0",
-
             "endIpAddress": "194.69.99.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUKLon2",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.196.0",
-
             "endIpAddress": "167.220.197.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUKLon3",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "91.234.254.0",
-
             "endIpAddress": "91.234.254.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsEETal1",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "194.69.108.0",
-
             "endIpAddress": "194.69.111.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsEETal2",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "194.69.104.0",
-
             "endIpAddress": "194.69.107.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSCYS01",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "157.58.192.0",
-
             "endIpAddress": "157.58.223.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSPhx120",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "70.42.230.0",
-
             "endIpAddress": "70.42.231.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSCO1a",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.64.0",
-
             "endIpAddress": "167.220.95.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSRed1",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.0.0",
-
             "endIpAddress": "167.220.1.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsSGSG2c",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "207.46.217.0",
-
             "endIpAddress": "207.46.217.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsIEDB4a",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "207.46.216.0",
-
             "endIpAddress": "207.46.216.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSBY2a",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "65.55.188.0",
-
             "endIpAddress": "65.55.188.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSBN1a",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "104.210.224.0",
-
             "endIpAddress": "104.210.255.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSBN1b",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "66.119.150.128",
-
             "endIpAddress": "66.119.150.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSBN1c",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "157.58.33.0",
-
             "endIpAddress": "157.58.33.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSCO1b",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "104.44.112.0",
-
             "endIpAddress": "104.44.112.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSCO1c",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "104.47.192.0",
-
             "endIpAddress": "104.47.199.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSDM2a",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "104.209.96.0",
-
             "endIpAddress": "104.209.127.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSDM2b",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "104.44.111.0",
-
             "endIpAddress": "104.44.111.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSCO1d",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "157.58.30.0",
-
             "endIpAddress": "157.58.30.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSSN1a",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "65.54.12.0",
-
             "endIpAddress": "65.54.12.127"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSSN1b",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "157.58.34.0",
-
             "endIpAddress": "157.58.34.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSBAY4",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "157.58.32.0",
-
             "endIpAddress": "157.58.32.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSDM2c",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "157.58.31.0",
-
             "endIpAddress": "157.58.31.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSBLU5",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.152.0",
-
             "endIpAddress": "167.220.152.127"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSBLU6",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.152.128",
-
             "endIpAddress": "167.220.152.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSPugetRed22",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "131.107.165.0",
-
             "endIpAddress": "131.107.165.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSPugetRed23",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.56.0",
-
             "endIpAddress": "167.220.63.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSPuget24",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.100.0",
-
             "endIpAddress": "167.220.103.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSPuget25",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.104.0",
-
             "endIpAddress": "167.220.105.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSPuget26",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.23.0",
-
             "endIpAddress": "167.220.23.127"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSPuget27",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.98.0",
-
             "endIpAddress": "167.220.99.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSBAY5",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.25.0",
-
             "endIpAddress": "167.220.25.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUSBAY6",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.27.0",
-
             "endIpAddress": "167.220.27.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsSGSG2d",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.255.128",
-
             "endIpAddress": "167.220.255.159"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsSGSG2e",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "167.220.255.160",
-
             "endIpAddress": "167.220.255.191"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUKLon4",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "194.69.102.0",
-
             "endIpAddress": "194.69.102.255"
-
           }
-
         },
-
         {
-
           "name": "AllowCorpIpsUKLon5",
-
           "type": "firewallrules",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
-
           ],
-
           "properties": {
-
             "startIpAddress": "194.69.103.0",
-
             "endIpAddress": "194.69.103.255"
-
           }
-
         },
-
         {
-
           "name": "[parameters('sqlDatabaseName')]",
-
           "type": "databases",
-
           "location": "[resourceGroup().location]",
-
           "apiVersion": "2014-04-01-preview",
-
           "dependsOn": [
-
             "[parameters('sqlServerName')]"
-
           ],
-
           "tags": {
-
             "displayName": "SQL Database",
-
             "dataBusinessImpact": "LBI"
-
           },
-
           "properties": {
-
             "collation": "[parameters('sqlDatabaseCollation')]",
-
             "edition": "[parameters('sqlDatabaseEdition')]",
-
             "maxSizeBytes": "[parameters('sqlDatabaseMaxSizeBytes')]",
-
             "requestedServiceObjectiveName": "[parameters('sqlServiceLevelObjective')]"
-
           }
-
         }
 
 
 
-
-
-
-
       ]
-
     }
-
   ],
-
   "outputs": {
-
     "storageAccountKeys": {
-
       "value": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('sqlAuditStorageAccountName')), '2015-05-01-preview').key1]",
-
       "type":  "string"
-
     }
-
   }
-
 }
