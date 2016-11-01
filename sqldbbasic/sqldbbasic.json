@@ -21,7 +21,7 @@
       "type": "string"
     },
     "sqlDatabaseEdition": {
-      "defaultValue": "Standard",
+r      "defaultValue": "Standard",
       "allowedValues": [
         "Basic",
         "Standard",
@@ -67,7 +67,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "https://armnestedtemplates.blob.core.windows.net/msitarm/msitsqldb01.json",
+          "uri": "https://raw.githubusercontent.com/rscott1066/cloudms-armtest/master/sqldbbasic/sqldbbasicnest.json",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
