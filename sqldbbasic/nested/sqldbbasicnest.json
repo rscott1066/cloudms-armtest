@@ -49,6 +49,7 @@
       ],
       "type": "string"
     },
+
     "sqlDatabaseMaxSizeBytes": {
       "type": "string",
       "defaultValue": "1073741824",
@@ -67,14 +68,24 @@
   "resources": [
     {
       "type": "Microsoft.Storage/storageAccounts",
-      "apiVersion": "2015-06-15",
+      "apiVersion": "2016-01-01",
       "name": "[variables('sqlAuditStorageAccountName')]",
       "location": "[resourceGroup().location]",
+      "sku": {
+        "name": "[parameters('sqlAuditingStorageAccountType)]"
+      },
+      "kind": "Storage",
       "properties": {
-        "accountType": "[parameters('sqlAuditingStorageAccountType')]"
+        "encryption": {
+          "keySource": "Microsoft.Storage",
+          "services": {
+            "blob": {
+              "enabled": true
+            }
+          }
+        }
       }
-    },
-
+    },  
     {
       "name": "[parameters('sqlServerName')]",
       "type": "Microsoft.Sql/servers",
