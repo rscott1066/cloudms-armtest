@@ -20,7 +20,7 @@
     "sqlAdministratorLogin": {
       "type": "string"
     },
-a    "sqlDatabaseEdition": {
+    "sqlDatabaseEdition": {
       "defaultValue": "Standard",
       "allowedValues": [
         "Basic",
