@@ -20,7 +20,7 @@
     "sqlAdministratorLogin": {
       "type": "string"
     },
-    "sqlDatabaseEdition": {
+a    "sqlDatabaseEdition": {
       "defaultValue": "Standard",
       "allowedValues": [
         "Basic",
@@ -67,7 +67,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "https://armnestedtemplates.blob.core.windows.net/msitarm/msitsqldb01.json",
+          "uri": "https://raw.githubusercontent.com/rscott1066/cloudms-armtest/master/sqldbbasic/sqldbbasicnet.json",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
