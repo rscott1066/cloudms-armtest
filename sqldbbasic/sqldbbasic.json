@@ -67,7 +67,7 @@ a    "sqlDatabaseEdition": {
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "https://github.com/rscott1066/cloudms-armtest/master/sqldbbasic/sqldbbasicnest.json",
+          "uri": "https://armnestedtemplates.blob.core.windows.net/msitarm/msitsqldb01.json",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
