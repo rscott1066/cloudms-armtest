@@ -138,12 +138,23 @@
     },
     {
       "type": "Microsoft.Storage/storageAccounts",
-      "apiVersion": "2015-06-15",
+      "apiVersion": "2016-01-01",
       "name": "[variables('keyVaultAuditStorageAccountName')]",
       "location": "[resourceGroup().location]",
+      "sku": {
+        "name": "[parameters('keyVaultAuditingStorageAccountType')]"
+      },
+      "kind": "Storage",
       "properties": {
-        "accountType": "[parameters('keyVaultAuditingStorageAccountType')]"
+        "encryption": {
+          "keySource": "Microsoft.Storage",
+          "services": {
+            "blob": {
+              "enabled": true
+            }
+          }
+        }
       }
-    }
+    }  
   ]
 }
