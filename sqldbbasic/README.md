@@ -1,4 +1,3 @@
-
 # Deploy Key Vault and Secret for Azure SQL Database
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Frscott1066%2Fcloudms-armtest%2Fmaster%2Fsqldbbasic%2Fsqldbbasickeyv.json" target="_blank">
@@ -40,36 +39,47 @@ When used in conjunction with the Azure SQL Database template (SQLDBBasic.json) 
 The following parameters are used in this template:
 
 keyVaultName
+
 This parameter contains the name of the key vault. When used in conjunction with the Azure SQL Database template (SQLDBBasic.json), this name must be the same as the name of the logical SQL Server to be deployed.
 
 tenantID
+
 This parameter is the ID of the Azure subscription to be initially assigned access to the key vault. The value can be obtained by using the Get-AzureRmSubscription PowerShell cmdlet. 
 
 objectID
+
 This parameter is the object ID of the AAD user or service principal that will have access to the vault. The object ID can be obtained by using the Get-AzureRmADUser or the Get-AzureRmADServicePrincipal PowerShell cmdlet.
 
 keysPermissions
+
 This array lists the permissions that will be granted to the user to any keys within the vault. This parameter is not used in this version of the template.
 
 secretsPermissions 
+
 This array lists permissions to grant to secrets within the vault. Valid values are all, get, set, list and delete.
 
 valutSKU
+
 Options are standard or premium
 
 enabledForDeployment
+
 This bool value specifies whether the valut is enabled for template deployments. The default value is true.
 
 enableVaultForVolumeEncryption
+
 This bool value specifies whether the vault is enabled for volume encryption. The default value for this template is false.
 
 secretName
+
 The name of the secret to be stored in the vault. When used in conjunction with the Azure SQL Database template (SQLDBBasic.json), this value should be the same as the name of the Azure SQL logical server.
 
 secretValue
+
 This parameter specifies the value of the secret to store in the vault and is of type securestring.
 
 keyVaultAuditingStorageAccountType
+
 This string value specifies the storage account type for the storage account that will be deployed for containing key vault audit events. The default is Standard_LRS.
 
 A PowerShell script is provided in the scripts subfolder under the template which will perform the following configuration actions following deployment of the ARM template:
@@ -80,11 +90,14 @@ A PowerShell script is provided in the scripts subfolder under the template whic
 For proper execution of the script the following parameters must be set prior to execution:
 
 resourceGroupName
+
 This variable must be set to the name of the resource group that contains the vault.
 
 azureSubscriptionName
+
 The name of the Azure subscription that owns the vault.
 
 retentionDays
+
 The number of days to retain audit events.
 
