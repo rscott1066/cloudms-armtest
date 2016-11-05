@@ -24,7 +24,7 @@
     "sqlAdministratorPassword": {
       "type": "securestring"
     },
-    "DataBusinessImpact": {
+    "dataBusinessImpact": {
       "defaultValue": "LBI",
       "allowedValues": [
         "LBI",
@@ -82,6 +82,10 @@
         "name": "[parameters('sqlAuditingStorageAccountType')]"
       },
       "kind": "Storage",
+      "tags": {
+        "displayName": "SQL Audit Storage",
+        "dataBusinessImpact": "[parameters('dataBusinessImpact')]"
+      },
       "properties": {
         "encryption": {
           "keySource": "Microsoft.Storage",
