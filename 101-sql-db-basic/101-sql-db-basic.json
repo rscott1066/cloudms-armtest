@@ -1,0 +1,124 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+  "parameters": {
+    "sqlAuditingStorageAccountType": {
+      "defaultValue": "Standard_LRS",
+      "allowedValues": [
+        "Premium_LRS",
+        "Standard_LRS",
+        "Standard_GRS"
+      ],
+      "type": "string",
+      "metadata": {
+        "description": "The storage account type to be used for SQL audit and diagnostic events"
+      }
+    },
+    "sqlServerName": {
+      "type": "string"
+    },
+    "sqlDatabaseName": {
+      "type": "string"
+    },
+    "sqlAdministratorLogin": {
+      "type": "string"
+    },
+    "dataBusinessImpact": {
+      "defaultValue": "LBI",
+      "allowedValues": [
+        "LBI",
+        "MBI",
+        "HBI"
+      ],
+      "type":  "string"
+    },
+    "sqlDatabaseEdition": {
+      "defaultValue": "Standard",
+      "allowedValues": [
+        "Basic",
+        "Standard",
+        "Premium"
+      ],
+      "type": "string"
+    },
+    "sqlServiceLevelObjective": {
+      "defaultValue": "S0",
+      "allowedValues": [
+        "Basic",
+        "S0",
+        "S1",
+        "S2",
+        "S3",
+        "P1",
+        "P2",
+        "P4",
+        "P6",
+        "P11"
+      ],
+      "type": "string"
+    },
+    "sqlDatabaseMaxSizeBytes": {
+      "type": "string",
+      "defaultValue": "1073741824",
+      "metadata": {
+        "description": "The maximum size, in bytes, for the database"
+      }
+    },
+    "sqlDatabaseCollation": {
+      "defaultValue": "SQL_Latin1_General_CP1_CI_AS",
+      "type": "string"
+    }
+  },
+    "variables": {
+    },
+  "resources": [
+    {
+      "name": "msitsqldbnested",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "https://raw.githubusercontent.com/rscott1066/cloudms-armtest/master/sqldbbasic/nested/sqldbbasicnest.json",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "sqlAuditingStorageAccountType": {
+            "value": "[parameters('sqlAuditingStorageAccountType')]"
+          },
+          "sqlServerName": {
+            "value": "[parameters('sqlServerName')]"
+          },
+          "sqlDatabaseName": {
+            "value": "[parameters('sqlDatabaseName')]"
+          },
+          "sqlAdministratorLogin": {
+            "value": "[parameters('sqlAdministratorLogin')]"
+          },
+          "sqlDatabaseEdition": {
+            "value": "[parameters('sqlDatabaseEdition')]"
+          },
+          "sqlServiceLevelObjective": {
+            "value": "[parameters('sqlServiceLevelObjective')]"
+          },
+          "sqlDatabaseMaxSizeBytes": {
+            "value": "[parameters('sqlDatabaseMaxSizeBytes')]"
+          },
+          "sqlDatabaseCollation": {
+            "value": "[parameters('sqlDatabaseCollation')]"
+          },
+          "sqlAdministratorPassword": {
+            "reference": {
+              "keyVault": {
+                "id": "[concat(resourceGroup().id, '/providers/Microsoft.KeyVault/vaults/', parameters('sqlServerName'))]"
+              },
+              "secretName": "[parameters('sqlServerName')]"
+            }
+          }
+        }
+      }
+    }
+  ],
+    "outputs": {
+    }
+}
