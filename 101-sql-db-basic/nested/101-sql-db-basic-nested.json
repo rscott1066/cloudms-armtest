@@ -24,6 +24,14 @@
     "sqlAdministratorPassword": {
       "type": "securestring"
     },
+    "DataBusinessImpact": {
+      "defaultValue": "LBI",
+      "allowedValues": [
+        "LBI",
+        "MBI",
+        "HBI"
+      ],  
+      "type": "string"
     "sqlDatabaseEdition": {
       "defaultValue": "Standard",
       "allowedValues": [
@@ -49,7 +57,6 @@
       ],
       "type": "string"
     },
-
     "sqlDatabaseMaxSizeBytes": {
       "type": "string",
       "defaultValue": "1073741824",
@@ -94,7 +101,7 @@
       "dependsOn": [ ],
       "tags": {
         "displayName": "SQL Server",
-        "dataBusinessImpact": "LBI"
+        "dataBusinessImpact": "[parameters('dataBusinessImpact')]"
       },
       "properties": {
         "administratorLogin": "[parameters('sqlAdministratorLogin')]",
