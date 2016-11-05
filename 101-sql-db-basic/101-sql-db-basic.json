@@ -113,7 +113,7 @@
           "sqlAdministratorLogin": {
             "value": "[parameters('sqlAdministratorLogin')]"
           },
-          "sqlDataBusinessImpact": {
+          "DataBusinessImpact": {
               "value": "[parameters('dataBusinessImpact')]"
           },    
           "sqlDatabaseEdition": {
