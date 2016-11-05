@@ -32,6 +32,7 @@
         "HBI"
       ],  
       "type": "string"
+    },
     "sqlDatabaseEdition": {
       "defaultValue": "Standard",
       "allowedValues": [
