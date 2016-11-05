@@ -10,6 +10,9 @@
         "Standard_GRS"
       ],
       "type": "string"
+             "metadata": {
+        "description": "The storage account type to be used for SQL audit and diagnostic events"
+      }
     },
     "sqlServerName": {
       "type": "string"
@@ -19,6 +22,15 @@
     },
     "sqlAdministratorLogin": {
       "type": "string"
+    },
+    "dataBusinessImpact": {
+      "defaultValue": "LBI",
+      "allowedValues": [
+        "LBI",
+        "MBI",
+        "HBI"
+      ],
+      "type":  "string"
     },
     "sqlDatabaseEdition": {
       "defaultValue": "Standard",
