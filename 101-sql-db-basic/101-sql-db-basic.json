@@ -15,13 +15,22 @@
       }
     },
     "sqlServerName": {
-      "type": "string"
+      "type": "string",
+      "metadata": {
+        "description": "The name of the logical SQL Server"
+      }
     },
     "sqlDatabaseName": {
-      "type": "string"
+      "type": "string",
+      "metadata": {
+        "description": "The name of the database"
+      }
     },
     "sqlAdministratorLogin": {
-      "type": "string"
+      "type": "string",
+      "metadata": {
+        "description": "The name of the SQL authentication administrative login"
+      }
     },
     "dataBusinessImpact": {
       "defaultValue": "LBI",
@@ -30,7 +39,10 @@
         "MBI",
         "HBI"
       ],
-      "type":  "string"
+      "type":  "string",
+        "metadata": {
+        "description": "The business impact classification of data to be stored in the database"
+      }
     },
     "sqlDatabaseEdition": {
       "defaultValue": "Standard",
@@ -39,7 +51,10 @@
         "Standard",
         "Premium"
       ],
-      "type": "string"
+      "type": "string",
+      "metadata": {
+        "description": "The SQL database edition"
+      }
     },
     "sqlServiceLevelObjective": {
       "defaultValue": "S0",
@@ -55,7 +70,10 @@
         "P6",
         "P11"
       ],
-      "type": "string"
+      "type": "string",
+      "metadata": {
+        "description": "The service level objective for the database"
+      }
     },
     "sqlDatabaseMaxSizeBytes": {
       "type": "string",
@@ -79,7 +97,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "https://raw.githubusercontent.com/rscott1066/cloudms-armtest/master/sqldbbasic/nested/sqldbbasicnest.json",
+          "uri": "https://raw.githubusercontent.com/rscott1066/cloudms-armtest/master/101-sql-db-basic/nested/101-sql-db-basic-nested.json",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -95,6 +113,9 @@
           "sqlAdministratorLogin": {
             "value": "[parameters('sqlAdministratorLogin')]"
           },
+          "sqlDataBusinessImpact": {
+              "value": "[parameters('dataBusinessImpact')]"
+          },    
           "sqlDatabaseEdition": {
             "value": "[parameters('sqlDatabaseEdition')]"
           },
